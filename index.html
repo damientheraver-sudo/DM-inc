@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DM Clothing</title>
+
+<style>
+
+/* LOADER */
+#loader{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:9999;
+font-size:30px;
+}
+
+/* BODY */
+body{
+margin:0;
+font-family:Arial;
+color:white;
+scroll-behavior:smooth;
+}
+
+/* VIDEO */
+video{
+position:fixed;
+top:50%;
+left:50%;
+min-width:100%;
+min-height:100%;
+transform:translate(-50%, -50%);
+object-fit:cover;
+z-index:-2;
+}
+
+/* OVERLAY */
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.45);
+z-index:-1;
+}
+
+/* GLASS */
+.glass{
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(12px);
+border-radius:15px;
+padding:20px;
+transition:0.3s;
+}
+.glass:hover{
+box-shadow:0 0 25px rgba(0,247,255,0.5);
+}
+
+/* HEADER */
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 30px;
+background:rgba(0,0,0,0.6);
+position:sticky;
+top:0;
+}
+nav a{
+margin:10px;
+text-decoration:none;
+color:white;
+font-weight:bold;
+}
+
+/* SECTION */
+section{
+padding:120px 20px;
+text-align:center;
+}
+
+/* PRODUCTS */
+.products{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:25px;
+}
+
+.product{
+width:220px;
+cursor:pointer;
+animation:float 4s ease-in-out infinite;
+transition:0.4s;
+}
+.product img{
+width:100%;
+border-radius:10px;
+}
+
+@keyframes float{
+0%{transform:translateY(0);}
+50%{transform:translateY(-10px);}
+100%{transform:translateY(0);}
+}
+
+.product:hover{
+transform:translateY(-15px) scale(1.08);
+}
+
+/* IMAGE SWITCH */
+.img-box{position:relative;}
+.img-box .back{position:absolute;top:0;left:0;opacity:0;}
+.img-box:hover .front{opacity:0;}
+.img-box:hover .back{opacity:1;}
+
+/* FILTER BUTTONS */
+.filters button{
+margin:10px;
+padding:10px;
+border:none;
+background:#00f7ff;
+cursor:pointer;
+}
+
+/* CART */
+.cart{
+position:fixed;
+right:-350px;
+top:0;
+width:300px;
+height:100%;
+background:black;
+padding:20px;
+transition:0.4s;
+}
+.cart.active{right:0;}
+
+/* MODAL */
+.product-modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+.modal-content{
+width:300px;
+text-align:center;
+position:relative;
+}
+.close{
+position:absolute;
+top:10px;
+right:15px;
+font-size:25px;
+cursor:pointer;
+}
+
+/* AUDIO */
+.audio-player{
+position:fixed;
+bottom:20px;
+left:20px;
+}
+
+/* SCROLL */
+.hidden{
+opacity:0;
+transform:translateY(80px);
+transition:1s;
+}
+.show{
+opacity:1;
+transform:translateY(0);
+}
+
+.stock{color:#00f7ff;}
+
+</style>
+</head>
+
+<body>
+
+<div id="loader">DM CLOTHING</div>
+
+<video autoplay muted loop playsinline>
+<source src="New folder (3)/cyberpunk-2077-inspired-neon-streets-wallpaperwaves-com.mp4" type="video/mp4">
+</video>
+
+<div class="overlay"></div>
+
+<header>
+<h1>DM Clothing</h1>
+<nav>
+<a href="#home">Home</a>
+<a href="#shop">Shop</a>
+<a href="#caps">Caps</a>
+<a href="#contact">Contact</a>
+</nav>
+<button onclick="toggleCart()">🛒</button>
+</header>
+
+<div class="cart" id="cart">
+<h3>Your Cart</h3>
+<ul id="cart-items"></ul>
+<p id="total"></p>
+</div>
+
+<section id="home" class="hidden">
+<div class="glass">
+<h2>Welcome to DM Clothing</h2>
+<p1>Define your drip</p1>
+</div>
+</section>
+
+<!-- SHOP -->
+<section id="shop" class="hidden">
+
+<h2>Shop</h2>
+
+<div class="filters">
+<button onclick="filterProducts('all')">All</button>
+<button onclick="filterProducts('shirt')">Shirts</button>
+<button onclick="filterProducts('hoodie')">Hoodies</button>
+<button onclick="filterProducts('cap')">Caps</button>
+</div>
+
+<div class="products">
+
+<div class="product glass shirt" onclick="openProduct('Classic T-Shirt',25,'images/shirt1.jpg','Premium cotton t-shirt','out of stock')">
+<img src="New folder (3)/Shirt design template.jpg">
+<h3>Classic T-Shirt</h3>
+<p>$25</p>
+<button onclick="event.stopPropagation();addToCart('Classic T-Shirt',25)">Add</button>
+</div>
+
+<div class="product glass hoodie" onclick="openProduct('Street Hoodie',40,'images/hoodie.jpg','Comfort hoodie','6 left')">
+<img src="New folder (3)/hoodie temp2.jpg">
+<h3>Street Hoodie</h3>
+<p>$40</p>
+<button onclick="event.stopPropagation();addToCart('Street Hoodie',40)">Add</button>
+</div>
+
+</div>
+</section>
+
+<!-- CAPS -->
+<section id="caps" class="hidden">
+
+<h2>Caps Collection</h2>
+
+<div class="filters">
+<button onclick="showCaps('snap')">Snapbacks</button>
+<button onclick="showCaps('adj')">Adjustables</button>
+</div>
+
+<div id="snap" class="products">
+
+<div class="product glass" onclick="openProduct('Black Snapback',20,'images/snapback1.jpg','Premium snapback','5 left')">
+<div class="img-box">
+<img src="New folder (3)/alternative snap back pics.jpg" class="front">
+</div>
+<h4>Black Snapback</h4>
+<p>$20</p>
+<p class="stock">Only 5 left</p>
+<button onclick="event.stopPropagation();addToCart('Black Snapback',20)">Add</button>
+</div>
+
+</div>
+
+<div id="adj" class="products" style="display:none;">
+<div class="product glass" onclick="openProduct('Classic Adjustable',18,'images/adjustable1.jpg','Adjustable cap','7 left')">
+<div class="img-box">
+<img src="images/adjustable1.jpg" class="front">
+<img src="images/adjustable1-back.jpg" class="back">
+</div>
+<h4>Classic Adjustable</h4>
+<p>$18</p>
+<p class="stock">Only 7 left</p>
+<button onclick="event.stopPropagation();addToCart('Classic Adjustable',18)">Add</button>
+</div>
+</div>
+
+</section>
+
+<section id="contact" class="hidden">
+<h2>Contact</h2>
+<button onclick="window.location='mailto:thedmchlothing@gmail.com'">Email Us</button>
+<button onclick="window.location='tel:+2349168177260'">Call Us</button>
+
+</section>
+
+<div class="audio-player">
+<audio controls loop>
+<source src="New folder (3)/Beethoven - Moonlight Sonata (FULL).mp3" type="audio/mpeg">
+</audio>
+</div>
+
+<!-- MODAL -->
+<div id="productModal" class="product-modal">
+<div class="modal-content glass">
+<span class="close" onclick="closeProduct()">×</span>
+<img id="modal-img">
+<h2 id="modal-title"></h2>
+<p id="modal-price"></p>
+<p id="modal-desc"></p>
+<p id="modal-stock"></p>
+<button id="modal-btn">Add to Cart</button>
+</div>
+</div>
+
+<script>
+
+/* LOADER */
+window.onload=()=>{loader.style.display="none";loadCart();}
+
+/* PARALLAX */
+window.addEventListener("scroll",()=>{
+let y=scrollY;
+document.querySelector("video").style.transform=
+`translate(-50%,calc(-50% + ${y*0.2}px))`;
+});
+
+/* CART */
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+
+function addToCart(n,p){
+cart.push({n,p});
+localStorage.setItem("cart",JSON.stringify(cart));
+updateCart();
+}
+
+function loadCart(){updateCart();}
+
+function updateCart(){
+let list=document.getElementById("cart-items");
+list.innerHTML="";
+let total=0;
+cart.forEach(i=>{
+let li=document.createElement("li");
+li.textContent=i.n+" - $"+i.p;
+list.appendChild(li);
+total+=i.p;
+});
+document.getElementById("total").textContent="Total: $"+total;
+}
+
+function toggleCart(){
+document.getElementById("cart").classList.toggle("active");
+}
+
+/* FILTER */
+function filterProducts(t){
+document.querySelectorAll(".product").forEach(p=>{
+p.style.display=(t==="all"||p.classList.contains(t))?"block":"none";
+});
+}
+
+/* CAPS SWITCH */
+function showCaps(type){
+document.getElementById("snap").style.display="none";
+document.getElementById("adj").style.display="none";
+document.getElementById(type).style.display="flex";
+}
+
+/* MODAL */
+function openProduct(n,p,img,d,s){
+document.getElementById("productModal").style.display="flex";
+document.getElementById("modal-img").src=img;
+document.getElementById("modal-title").textContent=n;
+document.getElementById("modal-price").textContent="$"+p;
+document.getElementById("modal-desc").textContent=d;
+document.getElementById("modal-stock").textContent="Stock: "+s;
+document.getElementById("modal-btn").onclick=()=>addToCart(n,p);
+}
+
+function closeProduct(){
+productModal.style.display="none";
+}
+
+/* SCROLL */
+const obs=new IntersectionObserver(e=>{
+e.forEach(x=>{if(x.isIntersecting)x.target.classList.add("show");});
+});
+document.querySelectorAll(".hidden").forEach(el=>obs.observe(el));
+
+</script>
+
+</body>
+</html>
